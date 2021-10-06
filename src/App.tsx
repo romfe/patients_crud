@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import api from './api/patients';
 import { PatientList } from './components/PatientList';
 import { GlobalStyle } from './styles/global';
 import { NewPatientModal } from './components/NewPatientModal';
@@ -11,6 +12,12 @@ function App() {
 
   const [isNewPatientModalOpen, setIsNewPatientModalOpen] = useState(false);
   const [isEditPatientModalOpen, setIsEditPatientModalOpen] = useState(false);
+  const [patients, setPatients] = useState("");
+
+  const retrievePatients = async () => {
+    const response = await api.get("/patients");
+    return response.data;
+  }
   const handleCloseNewPatientModal = () => {
     setIsNewPatientModalOpen(false);
   }
@@ -23,6 +30,14 @@ function App() {
   const handleOpenEditPatientModal = () => {
     setIsEditPatientModalOpen(true);
   }
+
+  const getAllPatients = async () => {
+    const allPatients = await retrievePatients();
+    if (allPatients) setPatients(allPatients);
+  }
+
+  //useEffect(() => {getAllPatients();}, []);
+
   return (
     <div>
       <Button
